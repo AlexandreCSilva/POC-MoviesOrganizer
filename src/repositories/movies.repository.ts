@@ -65,6 +65,15 @@ async function deleteMovieById (id: string): Promise<any[string]>{
     return movie.rows;
 }
 
+async function updateMovie (id: string, review: string, note: number): Promise<any[string]>{
+    const movie = await connection.query(
+        'UPDATE movies SET review = $1, note = $2 WHERE movies.id = $3',
+        [review, note, id]
+    );
+
+    return movie.rows;
+}
+
 
 export {
     getMoviesByName,
@@ -73,5 +82,6 @@ export {
     getMoviesGenre,
     getMoviesPlataform,
     getMovieId,
-    deleteMovieById
+    deleteMovieById,
+    updateMovie
 };

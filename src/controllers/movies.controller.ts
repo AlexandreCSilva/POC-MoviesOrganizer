@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { STATUS_CODE } from "../enums/statusCode.js";
-import { insertMovie, getMoviesRepository, getMoviesGenre, getMoviesPlataform, deleteMovieById } from "../repositories/movies.repository.js";
+import { insertMovie, getMoviesRepository, getMoviesGenre, getMoviesPlataform, deleteMovieById, updateMovie } from "../repositories/movies.repository.js";
 
 async function postMovie (req: Request, res: Response) {
     const movie = {
@@ -38,11 +38,18 @@ async function deleteMovie(req: Request, res: Response) {
 
     return res.send(movies).status(STATUS_CODE.OK);
 }
+
+async function updateMovieController(req: Request, res: Response) {
+    const movies = await updateMovie(req.query.id as string, req.body.review as string, req.body.note as number);
+
+    return res.send(movies).status(STATUS_CODE.OK);
+}
  
 export { 
     postMovie,
     getMovies,
     getMoviesByGenre,
     getMoviesByPlataform,
-    deleteMovie
+    deleteMovie,
+    updateMovieController
 };

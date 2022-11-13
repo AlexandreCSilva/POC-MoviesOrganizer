@@ -2,12 +2,14 @@ import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
 import { getMovies } from "../controllers/movies.controller.js";
 import { STATUS_CODE } from "../enums/statusCode.js";
+import { Review } from "../protocols/reviews.protocol.js";
 import { getGenre } from "../repositories/genres.repository.js";
 import { getMovieId, getMoviesByName } from "../repositories/movies.repository.js";
 import { getPlataform } from "../repositories/plataform.repository.js";
 import { genreSchema } from "../schemas/genre.schema.js";
 import { movieSchema } from "../schemas/movie.schema.js";
 import { plataformSchema } from "../schemas/plataform.schema.js";
+import { reviewSchema } from "../schemas/review.schema.js";
 
 async function verifyMovie (req: Request, res: Response, next: NextFunction) {
     const { error } = movieSchema.validate(
@@ -108,9 +110,9 @@ async function verifyMovieById (req: Request, res: Response, next: NextFunction)
         return res.sendStatus(STATUS_CODE.BAD_REQUEST);
     }
 
-    const validid = await getMovieId(id);
+    const validId = await getMovieId(id);
 
-    if (!validid){
+    if (validId.length == 0){
         console.log('Id do not exist')
         return res.sendStatus(STATUS_CODE.NOT_FOUND);
     }
@@ -118,10 +120,29 @@ async function verifyMovieById (req: Request, res: Response, next: NextFunction)
     next();
 }
 
+async function verifyMovieReview (req: Request, res: Response, next: NextFunction) {
+    const review: Review = { 
+        review: req.body.review,
+        note: req.body.note
+    };
+    
+    const { error } = reviewSchema.validate(
+        review,
+        { abortEarly: false }
+    );
+
+    if (error){
+        console.log(error.message)
+        return res.sendStatus(STATUS_CODE.NOT_FOUND);
+    }
+    
+    next();
+}
 
 export { 
     verifyMovie,
     verifyMovieGenre,
     verifyMoviePlataform,
-    verifyMovieById
+    verifyMovieById,
+    verifyMovieReview
 };
