@@ -5,6 +5,7 @@ import { getMoviesByName } from "../repositories/movies.repository.js";
 import { getPlataform } from "../repositories/plataform.repository.js";
 import { genreSchema } from "../schemas/genre.schema.js";
 import { movieSchema } from "../schemas/movie.schema.js";
+import { plataformSchema } from "../schemas/plataform.schema.js";
 
 async function verifyMovie (req: Request, res: Response, next: NextFunction) {
     const { error } = movieSchema.validate(
@@ -73,7 +74,33 @@ async function verifyMovieGenre (req: Request, res: Response, next: NextFunction
     next();
 }
 
+async function verifyMoviePlataform (req: Request, res: Response, next: NextFunction) {
+    const plataform: string = req.query.plataform as string;
+
+    const { error } = plataformSchema.validate(
+        { name: plataform},
+        { abortEarly: false }
+    );
+
+    if (error) {
+        console.log(error.message);
+        return res.sendStatus(STATUS_CODE.BAD_REQUEST);
+    }
+
+    const validPlataform = await getPlataform(plataform);
+
+    if (!validPlataform){
+        console.log('Plataform do not exist')
+        return res.sendStatus(STATUS_CODE.NOT_FOUND);
+    }
+
+    res.locals.plataform = validPlataform;
+    
+    next();
+}
+
 export { 
     verifyMovie,
-    verifyMovieGenre
+    verifyMovieGenre,
+    verifyMoviePlataform
 };

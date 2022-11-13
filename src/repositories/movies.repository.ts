@@ -28,9 +28,19 @@ async function getMoviesRepository (): Promise<any[string]>{
     return movie.rows;
 }
 
+// tirar o plutal de genres e plataforms id
 async function getMoviesGenre (id: number): Promise<any[string]>{
     const movie = await connection.query(
         'SELECT * FROM movies WHERE movies."genresId" = $1',
+        [id]
+    );
+
+    return movie.rows;
+}
+
+async function getMoviesPlataform (id: number): Promise<any[string]>{
+    const movie = await connection.query(
+        'SELECT * FROM movies WHERE movies."plataformsId" = $1',
         [id]
     );
 
@@ -41,5 +51,6 @@ export {
     getMoviesByName,
     insertMovie,
     getMoviesRepository,
-    getMoviesGenre
+    getMoviesGenre,
+    getMoviesPlataform
 };
