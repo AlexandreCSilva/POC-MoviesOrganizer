@@ -1,6 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import Joi from "joi";
-import { getMovies } from "../controllers/movies.controller.js";
 import { STATUS_CODE } from "../enums/statusCode.js";
 import { Review } from "../protocols/reviews.protocol.js";
 import { getGenre } from "../repositories/genres.repository.js";

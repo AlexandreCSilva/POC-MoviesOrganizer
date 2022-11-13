@@ -8,8 +8,8 @@ moviesRoute.post('/movie', verifyMovie, postMovie);
 moviesRoute.get('/movies', getMovies);
 moviesRoute.get('/movies/genre/', verifyMovieGenre, getMoviesByGenre);
 moviesRoute.get('/movies/plataform/', verifyMoviePlataform, getMoviesByPlataform);
-moviesRoute.delete('/movie', verifyMovieById, deleteMovie);
-moviesRoute.patch('/movie', verifyMovieById, verifyMovieReview, updateMovieController);
+moviesRoute.delete('/movie/', verifyMovieById, deleteMovie);
+moviesRoute.patch('/movie/', verifyMovieById, verifyMovieReview, updateMovieController);
 
 export { 
     moviesRoute
