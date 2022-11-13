@@ -7,4 +7,4 @@ type Movie = {
 
 export {
     Movie
-}
+};

@@ -5,7 +5,7 @@ import { insertGenre } from "../repositories/genres.repository.js";
 async function postGenre (req: Request, res: Response) {
    await insertGenre(req.body.name);
 
-   return res.sendStatus(STATUS_CODE.CREATED)
+   return res.sendStatus(STATUS_CODE.CREATED);
 }
 
 export { 
