@@ -28,8 +28,18 @@ async function getMoviesRepository (): Promise<any[string]>{
     return movie.rows;
 }
 
+async function getMoviesGenre (id: number): Promise<any[string]>{
+    const movie = await connection.query(
+        'SELECT * FROM movies WHERE movies."genresId" = $1',
+        [id]
+    );
+
+    return movie.rows;
+}
+
 export {
     getMoviesByName,
     insertMovie,
-    getMoviesRepository
+    getMoviesRepository,
+    getMoviesGenre
 };
