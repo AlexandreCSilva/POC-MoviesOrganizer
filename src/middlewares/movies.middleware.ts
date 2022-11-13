@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from "express";
+import Joi from "joi";
+import { getMovies } from "../controllers/movies.controller.js";
 import { STATUS_CODE } from "../enums/statusCode.js";
 import { getGenre } from "../repositories/genres.repository.js";
-import { getMoviesByName } from "../repositories/movies.repository.js";
+import { getMovieId, getMoviesByName } from "../repositories/movies.repository.js";
 import { getPlataform } from "../repositories/plataform.repository.js";
 import { genreSchema } from "../schemas/genre.schema.js";
 import { movieSchema } from "../schemas/movie.schema.js";
@@ -99,8 +101,27 @@ async function verifyMoviePlataform (req: Request, res: Response, next: NextFunc
     next();
 }
 
+async function verifyMovieById (req: Request, res: Response, next: NextFunction) {
+    const id: string = req.query.id as string;
+
+    if (!id) {
+        return res.sendStatus(STATUS_CODE.BAD_REQUEST);
+    }
+
+    const validid = await getMovieId(id);
+
+    if (!validid){
+        console.log('Id do not exist')
+        return res.sendStatus(STATUS_CODE.NOT_FOUND);
+    }
+    
+    next();
+}
+
+
 export { 
     verifyMovie,
     verifyMovieGenre,
-    verifyMoviePlataform
+    verifyMoviePlataform,
+    verifyMovieById
 };

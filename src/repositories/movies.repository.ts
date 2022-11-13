@@ -47,10 +47,31 @@ async function getMoviesPlataform (id: number): Promise<any[string]>{
     return movie.rows;
 }
 
+async function getMovieId (id: string): Promise<any[string]>{
+    const movie = await connection.query(
+        'SELECT * FROM movies WHERE movies.id = $1',
+        [id]
+    );
+
+    return movie.rows;
+}
+
+async function deleteMovieById (id: string): Promise<any[string]>{
+    const movie = await connection.query(
+        'DELETE FROM movies WHERE movies.id = $1',
+        [id]
+    );
+
+    return movie.rows;
+}
+
+
 export {
     getMoviesByName,
     insertMovie,
     getMoviesRepository,
     getMoviesGenre,
-    getMoviesPlataform
+    getMoviesPlataform,
+    getMovieId,
+    deleteMovieById
 };
