@@ -6,4 +6,6 @@ const moviesRoute = Router();
 
 moviesRoute.post('/movie', verifyMovie, postMovie);
 
-export { moviesRoute };
+export { 
+    moviesRoute
+};

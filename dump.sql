@@ -1,4 +1,4 @@
-CREATE DATABASE "moviesOrganizer";
+CREATE DATABASE "moviesorganizer";
 
 CREATE TABLE "genres" (
 	id SERIAL PRIMARY KEY,

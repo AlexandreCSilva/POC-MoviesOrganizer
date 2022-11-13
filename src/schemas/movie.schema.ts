@@ -1,6 +1,7 @@
 import Joi from "joi";
+import { Movie } from "../protocols/movie.protocol.js";
 
-const movieSchema = Joi.object({
+const movieSchema: Joi.ObjectSchema<Movie> = Joi.object({
     name: Joi
             .string()
             .required(),
@@ -16,4 +17,6 @@ const movieSchema = Joi.object({
             .required()
 });
 
-export { movieSchema };
+export { 
+        movieSchema
+};

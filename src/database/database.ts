@@ -9,4 +9,6 @@ const connection = new Pool({
     database: 'moviesorganizer',
 })
 
-export { connection };
+export { 
+    connection
+};

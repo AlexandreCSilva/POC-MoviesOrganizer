@@ -4,4 +4,6 @@ async function postMovie (req, res) {
     console.log("aqui");
 }
 
-export { postMovie };
+export { 
+    postMovie 
+};
