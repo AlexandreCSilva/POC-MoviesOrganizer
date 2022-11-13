@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { STATUS_CODE } from "../enums/statusCode.js";
-import { insertMovie } from "../repositories/movies.repository.js";
+import { insertMovie, getMoviesRepository } from "../repositories/movies.repository.js";
 
 async function postMovie (req: Request, res: Response) {
     const movie = {
@@ -14,7 +14,14 @@ async function postMovie (req: Request, res: Response) {
 
     return res.sendStatus(STATUS_CODE.CREATED)
 }
+
+async function getMovies(req: Request, res: Response) {
+    const movies = await getMoviesRepository();
+
+    return res.send(movies).status(STATUS_CODE.OK);
+}
  
 export { 
-    postMovie 
+    postMovie,
+    getMovies
 };

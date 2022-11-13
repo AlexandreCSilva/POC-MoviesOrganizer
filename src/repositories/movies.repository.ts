@@ -1,6 +1,5 @@
 import { QueryResult } from "pg";
 import { connection } from "../database/database.js";
-import { Movie } from "../protocols/movie.protocol.js";
 
 async function insertMovie (movie: {name: string, image: string, genreId: number, plataformId: number}): Promise<QueryResult<Array<string>>>{
     // mudar o genres e o plataforms id
@@ -21,7 +20,16 @@ async function getMoviesByName (name: string): Promise<QueryResult<Array<string>
     return movie.rows[0];
 }
 
+async function getMoviesRepository (): Promise<any[string]>{
+    const movie = await connection.query(
+        'SELECT * FROM movies'
+    );
+
+    return movie.rows;
+}
+
 export {
     getMoviesByName,
-    insertMovie
+    insertMovie,
+    getMoviesRepository
 };

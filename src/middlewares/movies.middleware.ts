@@ -30,12 +30,14 @@ async function verifyMovie (req: Request, res: Response, next: NextFunction) {
     const validGenre = await getGenre(req.body.genre);
 
     if (!validGenre){
+        console.log('Genre do not exist')
         return res.sendStatus(STATUS_CODE.NOT_FOUND);
     }
 
     const validPlataform = await getPlataform(req.body.plataform);
 
     if (!validPlataform){
+        console.log('Plataform do not exist')
         return res.sendStatus(STATUS_CODE.NOT_FOUND);
     }
 
