@@ -9,13 +9,12 @@ async function verifyGenre (req: Request, res: Response, next: NextFunction) {
         { abortEarly: false }
     )
     
-    console.log(error)
     if (error) {
         console.log(error.message);
         return res.sendStatus(STATUS_CODE.BAD_REQUEST);
     }
 
-    let usedGenre = await getGenre(req.body);
+    const usedGenre = await getGenre(req.body.name);
 
     if (usedGenre){
         return res.sendStatus(STATUS_CODE.CONFLICT);
