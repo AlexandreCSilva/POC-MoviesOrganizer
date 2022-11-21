@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { STATUS_CODE } from "../enums/statusCode.js";
 import { Review } from "../protocols/reviews.protocol.js";
 import { getGenre } from "../repositories/genres.repository.js";
-import { getMovieId, getMoviesByName } from "../repositories/movies.repository.js";
+import { getMovieByName, getMovieId } from "../repositories/movies.repository.js";
 import { getPlataform } from "../repositories/plataform.repository.js";
 import { genreSchema } from "../schemas/genre.schema.js";
 import { movieSchema } from "../schemas/movie.schema.js";
@@ -25,7 +25,7 @@ async function verifyMovie (req: Request, res: Response, next: NextFunction) {
         return res.sendStatus(STATUS_CODE.BAD_REQUEST);
     }
 
-    const validMovie = await getMoviesByName(req.body.name);
+    const validMovie = await getMovieByName(req.body.name);
 
     if (validMovie){
         return res.sendStatus(STATUS_CODE.CONFLICT);
@@ -102,20 +102,24 @@ async function verifyMoviePlataform (req: Request, res: Response, next: NextFunc
 }
 
 async function verifyMovieById (req: Request, res: Response, next: NextFunction) {
-    const id: string = req.query.id as string;
+    const id = req.query.id as unknown as number;
 
     if (!id) {
         return res.sendStatus(STATUS_CODE.BAD_REQUEST);
     }
 
-    const validId = await getMovieId(id);
+    try {
+        const validId = await getMovieId(id);
 
-    if (validId.length == 0){
-        console.log('Id do not exist')
-        return res.sendStatus(STATUS_CODE.NOT_FOUND);
+        if (!validId){
+            console.log('Id do not exist')
+            return res.sendStatus(STATUS_CODE.NOT_FOUND);
+        }
+        
+        next();
+    } catch (error) {
+        return res.sendStatus(STATUS_CODE.BAD_REQUEST);
     }
-    
-    next();
 }
 
 async function verifyMovieReview (req: Request, res: Response, next: NextFunction) {

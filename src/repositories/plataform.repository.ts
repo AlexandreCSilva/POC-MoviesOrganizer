@@ -1,22 +1,24 @@
-import { QueryResult } from "pg";
+import { plataforms } from "@prisma/client";
 import { connection } from "../database/database.js";
 
-async function insertPlataform (name: string): Promise<QueryResult<Array<string>>>{
-    const plataform = await connection.query(
-        'INSERT INTO plataforms (name) VALUES ($1)',
-        [name]
-    );
+async function insertPlataform (name: string): Promise<plataforms>{
+    const plataform = await connection.plataforms.create({
+        data: {
+            name: name
+        }
+    });
     
-    return plataform.rows[0];
+    return plataform;
 }
 
-async function getPlataform (name: string): Promise<QueryResult<Array<string>>>{
-    const plataform = await connection.query(
-        'SELECT * FROM plataforms WHERE name = $1',
-        [name]
-    );
+async function getPlataform (name: string): Promise<plataforms>{
+    const plataform = await connection.plataforms.findFirst({
+        where: {
+            name: name
+        }
+    });
 
-    return plataform.rows[0];
+    return plataform;
 }
 
 export {

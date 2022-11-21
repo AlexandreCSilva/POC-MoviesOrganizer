@@ -1,81 +1,97 @@
-import { QueryResult } from "pg";
+import { movies } from "@prisma/client";
 import { connection } from "../database/database.js";
 
-async function insertMovie (movie: {name: string, image: string, genreId: number, plataformId: number}): Promise<QueryResult<Array<string>>>{
-    const response = await connection.query(
-        'INSERT INTO movies (name, image, "genresId", "plataformsId") VALUES ($1, $2, $3, $4)',
-        [movie.name, movie.image, movie.genreId, movie.plataformId]
-    );
+export type movieCreateType = {
+    name: string,
+    image: string,
+    genresId: number,
+    plataformsId: number
+}
+
+async function insertMovie(movie: movieCreateType): Promise<number>{
+    const response = await connection.movies.create({
+        data: movie
+    });
     
-    return response.rows[0];
+    return response.id;
 }
 
-async function getMoviesByName (name: string): Promise<QueryResult<Array<string>>>{
-    const movie = await connection.query(
-        'SELECT * FROM movies WHERE name = $1',
-        [name]
-    );
+async function getMovieByName (name: string): Promise<movies>{
+    const movie = await connection.movies.findFirst({
+        where: {
+            name: name
+        }
+    });
 
-    return movie.rows[0];
+    return movie;
 }
 
-async function getMoviesRepository (): Promise<any[string]>{
-    const movie = await connection.query(
-        'SELECT * FROM movies'
-    );
+async function getMoviesRepository (): Promise<Array<movies>>{
+    const movies = await connection.movies.findMany({
+        where: {}
+    });
 
-    return movie.rows;
+    return movies;
 }
 
 
-async function getMoviesGenre (id: number): Promise<any[string]>{
-    const movie = await connection.query(
-        'SELECT * FROM movies WHERE movies."genresId" = $1',
-        [id]
-    );
+async function getMoviesGenre (id: number): Promise<Array<movies>>{
+    const movies = await connection.movies.findMany({
+        where: {
+            genresId: id
+        }
+    });
 
-    return movie.rows;
+    return movies;
 }
 
-async function getMoviesPlataform (id: number): Promise<any[string]>{
-    const movie = await connection.query(
-        'SELECT * FROM movies WHERE movies."plataformsId" = $1',
-        [id]
-    );
+async function getMoviesPlataform (id: number): Promise<Array<movies>>{
+    const movies = await connection.movies.findMany({
+        where: {
+            plataformsId: id
+        }
+    });
 
-    return movie.rows;
+    return movies;
 }
 
-async function getMovieId (id: string): Promise<any[string]>{
-    const movie = await connection.query(
-        'SELECT * FROM movies WHERE movies.id = $1',
-        [id]
-    );
+async function getMovieId (id: number): Promise<movies>{
+    const movie = await connection.movies.findFirst({
+        where: {
+            id: id
+        }
+    });
 
-    return movie.rows;
+    return movie;
 }
 
-async function deleteMovieById (id: string): Promise<any[string]>{
-    const movie = await connection.query(
-        'DELETE FROM movies WHERE movies.id = $1',
-        [id]
-    );
+async function deleteMovieById (id: number): Promise<movies>{
+    const movie = await connection.movies.delete({
+        where: {
+            id: id
+        }
+    });
 
-    return movie.rows;
+    return movie;
 }
 
-async function updateMovie (id: string, review: string, note: number): Promise<any[string]>{
-    const movie = await connection.query(
-        'UPDATE movies SET review = $1, note = $2 WHERE movies.id = $3',
-        [review, note, id]
-    );
+async function updateMovie (id: number, review: string, note: number): Promise<movies>{
+    const movie = await connection.movies.update({
+        where: {
+            id: id
+        },
+        data: {
+            review: review,
+            note: note
+        }
+    });
 
-    return movie.rows;
+    return movie;
 }
 
 
 export {
-    getMoviesByName,
+    getMovieByName,
     insertMovie,
     getMoviesRepository,
     getMoviesGenre,
